@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
 
-const Book = ({ title, authors, thumbnail, onChangeShelf, shelf }) => {
+const Book = ({ id, title, authors, thumbnail, onChangeShelf, shelf }) => {
    const [selectedShelf, setSelectedShelf] = useState();
 
    useEffect(() => {
-      console.log('what is shelf', shelf)
       setSelectedShelf(shelf);
    }, []);
 
    const handleSelectShelf = (e) => {
       setSelectedShelf(e.target.value)
-      onChangeShelf(e.target.value);
+      onChangeShelf({shelf: e.target.value, id:id });
    }
 
    return (
@@ -26,7 +25,6 @@ const Book = ({ title, authors, thumbnail, onChangeShelf, shelf }) => {
                   `url("${thumbnail}")`,
                }}
             ></div>
-            teste
             <div className="book-shelf-changer">
                <select value={selectedShelf} onChange={handleSelectShelf}>
                   <option value="none" disabled>
@@ -43,6 +41,8 @@ const Book = ({ title, authors, thumbnail, onChangeShelf, shelf }) => {
          </div>
          <div className="book-title">{ title }</div>
          <div className="book-authors">
+            id: {id}
+            shelf: {shelf}
             { authors && authors.length > 0 && authors.map((author) => (
                <div>{author}</div>
             )) }

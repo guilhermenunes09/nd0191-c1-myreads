@@ -1,11 +1,10 @@
 import Book from './Book';
 
-const ListBooks = ({ books }) => {
-   const changeShelf = (e) => {
-      console.log('change shelf', e)
-      return (
-         <li>Olá mundo</li>
-      )
+const ListBooks = ({ books, onChangeShelf }) => {
+
+   console.log('books', books)
+   const changeShelf = (book) => {
+      onChangeShelf(book);
    }
    return (
       <div className="list-books-content">
@@ -15,8 +14,9 @@ const ListBooks = ({ books }) => {
                <div className="bookshelf-books">
                <ol className="books-grid">
                   { books.filter(book => book.shelf === "currentlyReading").map((book) => (
-                     <li>
+                     <li key={book.id}>
                         <Book 
+                           id={book.id}
                            title={book.title}
                            authors={book.authors}
                            thumbnail={book.imageLinks.smallThumbnail}
@@ -34,7 +34,8 @@ const ListBooks = ({ books }) => {
                <ol className="books-grid">
                { books.filter(book => book.shelf === "wantToRead").map((book) => (
                      <li>
-                        <Book 
+                        <Book
+                           id={book.id}
                            title={book.title}
                            authors={book.authors}
                            thumbnail={book.imageLinks.smallThumbnail}
@@ -53,6 +54,7 @@ const ListBooks = ({ books }) => {
                { books.filter(book => book.shelf === "read").map((book) => (
                      <li>
                         <Book 
+                           id={book.id}
                            title={book.title}
                            authors={book.authors}
                            thumbnail={book.imageLinks.smallThumbnail}

@@ -1,27 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import * as BooksAPI from "./BooksAPI";
 import Book from "./Book";
 
-const SearchPage = () => {
+const SearchPage = ({ books, onChangeShelf }) => {
 
-   const [books, setBooks] = useState([]);
-
-   useEffect(() => {
-      const getAllBooks = async () => {
-         const res = await BooksAPI.getAll();
-         setBooks(res);
-         console.log('check response', res)
-      }
-      
-      getAllBooks();
-   }, []);
-
-   const changeShelf = (e) => {
-      console.log('change shelf', e)
-      return (
-         <li>Olá mundo</li>
-      )
+   const changeShelf = (book) => {
+      onChangeShelf(book);
    }
 
    return (
@@ -40,6 +24,7 @@ const SearchPage = () => {
             { books.map((book) => (
                <li>
                   <Book 
+                     id={book.id}
                      title={book.title}
                      authors={book.authors}
                      thumbnail={book.imageLinks.smallThumbnail}

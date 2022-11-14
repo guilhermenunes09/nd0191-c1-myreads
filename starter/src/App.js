@@ -22,6 +22,22 @@ function App() {
      getAllBooks();
   }, []);
 
+  const changeShelf = (bookOption) => {
+    console.log('official', bookOption.shelf, bookOption.id);
+
+    const newBooks = books.map((book) => {
+      if(book.id === bookOption.id) {
+        console.log('check book', book)
+        book.shelf = bookOption.shelf;
+      }
+      return book;
+    });
+
+    console.log('chck new books', newBooks)
+
+    setBooks(newBooks);
+  }
+
   const addBook = (book) => {
 
   }
@@ -33,8 +49,8 @@ function App() {
             <h1>MyReads</h1>
           </div>
           <Routes>
-            <Route exact path="/" element={<ListBooks books={books} onAddBook={addBook} />} />
-            <Route exact path="/searchpage" element={<SearchPage/>} />
+            <Route exact path="/" element={<ListBooks books={books} onChangeShelf={changeShelf} onAddBook={addBook} />} />
+            <Route exact path="/searchpage" element={<SearchPage books={books} onChangeShelf={changeShelf} />} />
           </Routes>
           <Link to='/newbook'>
           <div className="open-search">
