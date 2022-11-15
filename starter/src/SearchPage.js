@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Book from "./Book";
+import { debounce } from "lodash";
 
 const SearchPage = ({ books, onChangeShelf, onChangeSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -9,11 +10,20 @@ const SearchPage = ({ books, onChangeShelf, onChangeSearch }) => {
     onChangeShelf(book);
   }
 
+  /**
+   * @param {object} e
+   * @description wait for the user to
+   * stop typing in order to perform the search
+   */
+  const searchRequest = debounce((e) => {
+    onChangeSearch(e.target.value);
+  }, 500);
+
   const handleInputChange = (e) => {
     setSearchQuery(e.target.value);
-    onChangeSearch(e.target.value);
+    searchRequest(e);
   }
-
+  
   /**
    * 
    * @param {object} e

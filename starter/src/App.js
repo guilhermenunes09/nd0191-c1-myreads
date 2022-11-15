@@ -21,6 +21,12 @@ function App() {
 
   const updateLibrary = async (book, shelf) => {
     await BooksAPI.update(book, shelf)
+    const exists = books.filter((b) => b.id === book.id)
+
+    if(exists.length === 0) {
+      const bookData = await BooksAPI.get(book.id);
+      setBooks(books.concat(bookData));
+    }
   }
 
   /**
@@ -42,45 +48,18 @@ function App() {
 
   /**
    * @param {string} searchQuery 
-   * @returns {array} concatenation of multiple queries
-   * @description it takes a string and check if the string matches
-   * with books attributes, for example, title, authors, etc.
+   * @description get books from the server based on search params
    */
-  const changeSearch = (searchQuery) => {
+  const changeSearch = async (searchQuery) => {
     if(!searchQuery) {
       setSearchBooks(books);
       return;
     }
-  
-    let query = books.filter((book) => {
-      return book.title.toLowerCase().includes(searchQuery.toLowerCase());
-    });
 
-    books.forEach((book, index) => {
-      if (book.authors.length > 0) {
-        book.authors.forEach((author) => {
-          if(author.toLowerCase().includes(searchQuery.toLowerCase())) {
-            if(query.filter(q => q.id === books[index].id).length === 0) {  
-              query.push(books[index]);
-            }
-          }
-        });
-      }
-      
-      if(book.industryIdentifiers.length > 0) {
-        book.industryIdentifiers.every((isbn) => {
-          if(String(isbn.identifier).includes(searchQuery)) {
-            if(query.filter(q => q.id === books[index].id).length === 0) {    
-              query.push(books[index]);
-              return false;
-            }
-          }
-          return true;
-        })
-      }
-    });
-    
-    setSearchBooks(query);
+  const res = await BooksAPI.search(searchQuery, 10);
+    if(res && Array.isArray(res)) {
+      setSearchBooks(res);
+    }
   }
 
   return (
