@@ -19,12 +19,17 @@ function App() {
      getAllBooks();
   }, []);
 
+  const updateLibrary = async (book, shelf) => {
+    await BooksAPI.update(book, shelf)
+  }
+
   /**
    * @param {object} bookOption 
    * @description changes a book from one shelf to another
    * by user's actions
    */
   const changeShelf = (bookOption) => {
+    updateLibrary(bookOption, bookOption.shelf);
     const newBooks = books.map((book) => {
       if(book.id === bookOption.id) {
         book.shelf = bookOption.shelf;
