@@ -42,10 +42,6 @@ const Book = ({ book, onChangeShelf }) => {
           { book.authors && book.authors.length > 0 && book.authors.map((author) => (
             <div key={author}>{author}</div>
           )) }
-
-          { book.industryIdentifiers && book.industryIdentifiers.length > 0 && book.industryIdentifiers.map((isbn) => (
-            <div key={isbn.identifier}>{isbn.type}: {isbn.identifier}</div>
-          )) }
         </div>
       </div>
     </div>

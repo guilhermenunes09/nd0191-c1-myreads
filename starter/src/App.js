@@ -37,13 +37,26 @@ function App() {
     updateLibrary(bookOption, bookOption.shelf);
 
     const myNewBooks = myBooks.map((book) => {
-      if(book.id == bookOption.id) {
+      if(book.id === bookOption.id) {
         book.shelf = bookOption.shelf;
       }
       return book;
     })
 
     setMyBooks(myNewBooks);
+
+    const isInSearch = searchBooks.filter((book) => book.id === bookOption.id);
+
+    if(isInSearch.length > 0) {
+      const newSearchBooks = searchBooks.map((book) => {
+        if(book.id === bookOption.id) {
+          book.shelf = bookOption.shelf;
+        }
+        return book;
+      });
+
+      setSearchBooks(newSearchBooks);
+    }
   }
 
   /**
