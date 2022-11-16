@@ -1,6 +1,6 @@
-const Book = ({ id, title, authors, thumbnail, onChangeShelf, shelf, industryIdentifiers }) => {
+const Book = ({ book, onChangeShelf }) => {
   const handleSelectShelf = (e) => {
-    onChangeShelf({shelf: e.target.value, id:id });
+    onChangeShelf({shelf: e.target.value, id: book.id });
   }
 
   return (
@@ -13,12 +13,12 @@ const Book = ({ id, title, authors, thumbnail, onChangeShelf, shelf, industryIde
             width: 128,
             height: 193,
             backgroundImage:
-              `url("${thumbnail}")`,
+              `url("${book.imageLinks && book.imageLinks.smallThumbnail}")`,
             }}
           ></div>
 
           <div className="book-shelf-changer">
-            <select value={shelf} onChange={handleSelectShelf}>
+            <select value={book.shelf === `none` ? `none` : book.shelf} onChange={handleSelectShelf}>
               <option value="none" disabled>
                 Move to...
               </option>
@@ -36,14 +36,14 @@ const Book = ({ id, title, authors, thumbnail, onChangeShelf, shelf, industryIde
           </div>
         </div>
 
-        <div className="book-title">{ title }</div>
+        <div className="book-title">{ book.title }</div>
 
         <div className="book-authors">
-          { authors && authors.length > 0 && authors.map((author) => (
+          { book.authors && book.authors.length > 0 && book.authors.map((author) => (
             <div key={author}>{author}</div>
           )) }
 
-          { industryIdentifiers && industryIdentifiers.length > 0 && industryIdentifiers.map((isbn) => (
+          { book.industryIdentifiers && book.industryIdentifiers.length > 0 && book.industryIdentifiers.map((isbn) => (
             <div key={isbn.identifier}>{isbn.type}: {isbn.identifier}</div>
           )) }
         </div>

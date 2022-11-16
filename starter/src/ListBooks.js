@@ -1,8 +1,8 @@
 import Book from './Book';
 
-const ListBooks = ({ books, onChangeShelf }) => {
+const ListBooks = ({ books, onChangeShelfLibrary }) => {
   const changeShelf = (book) => {
-    onChangeShelf(book);
+    onChangeShelfLibrary(book);
   }
 
   return (
@@ -16,11 +16,7 @@ const ListBooks = ({ books, onChangeShelf }) => {
               { books.filter(book => book.shelf === "currentlyReading").map((book) => (
                 <li key={`${book.id}-currently-reading`}>
                   <Book 
-                    id={book.id}
-                    title={book.title}
-                    authors={book.authors}
-                    thumbnail={book.imageLinks.smallThumbnail}
-                    shelf={book.shelf}
+                    book={book}
                     onChangeShelf={changeShelf}
                   />
                 </li>
@@ -36,11 +32,7 @@ const ListBooks = ({ books, onChangeShelf }) => {
               { books.filter(book => book.shelf === "wantToRead").map((book) => (
                 <li key={`${book.id}-want-to-read`}>
                   <Book
-                    id={book.id}
-                    title={book.title}
-                    authors={book.authors}
-                    thumbnail={book.imageLinks.smallThumbnail}
-                    shelf={book.shelf}
+                    book={book}
                     onChangeShelf={changeShelf}
                   />
                 </li>
@@ -57,11 +49,7 @@ const ListBooks = ({ books, onChangeShelf }) => {
               { books.filter(book => book.shelf === "read").map((book) => (
                 <li key={`${book.id}-read`}>
                   <Book 
-                    id={book.id}
-                    title={book.title}
-                    authors={book.authors}
-                    thumbnail={book.imageLinks.smallThumbnail}
-                    shelf={book.shelf}
+                    book={book}
                     onChangeShelf={changeShelf}
                   />
                 </li>

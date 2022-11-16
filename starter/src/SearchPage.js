@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import Book from "./Book";
 import { debounce } from "lodash";
 
-const SearchPage = ({ books, onChangeShelf, onChangeSearch }) => {
+const SearchPage = ({ books, onChangeShelfSearch, onChangeSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const changeShelf = (book) => {
-    onChangeShelf(book);
+    onChangeShelfSearch(book);
   }
 
   /**
@@ -54,15 +54,10 @@ const SearchPage = ({ books, onChangeShelf, onChangeSearch }) => {
 
       <div className="search-books-results">
         <ol className="books-grid">
-          { books && books.map((book) => (
+          { books && books.length > 0 && books.map((book) => (
             <li key={`${book.industryIdentifiers[0].identifier}-search-page`}>
               <Book 
-                id={book.id}
-                title={book.title}
-                authors={book.authors}
-                industryIdentifiers={book.industryIdentifiers}
-                thumbnail={book.imageLinks.smallThumbnail}
-                shelf={book.shelf}
+                book={book}
                 onChangeShelf={changeShelf}
               />
             </li>

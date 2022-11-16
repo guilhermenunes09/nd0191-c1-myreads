@@ -6,14 +6,13 @@ import SearchPage from './SearchPage';
 import * as BooksAPI from "./BooksAPI";
 
 function App() {
-  const [books, setBooks] = useState([]);
+  const [myBooks, setMyBooks] = useState([]);
   const [searchBooks, setSearchBooks] = useState([]);
 
   useEffect(() => {
      const getAllBooks = async () => {
         const res = await BooksAPI.getAll();
-        setBooks(res);
-        setSearchBooks(res);
+        setMyBooks(res);
      }
      
      getAllBooks();
@@ -21,11 +20,11 @@ function App() {
 
   const updateLibrary = async (book, shelf) => {
     await BooksAPI.update(book, shelf)
-    const exists = books.filter((b) => b.id === book.id)
+    const exists = myBooks.filter((b) => b.id === book.id)
 
     if(exists.length === 0) {
       const bookData = await BooksAPI.get(book.id);
-      setBooks(books.concat(bookData));
+      setMyBooks(myBooks.concat(bookData));
     }
   }
 
@@ -34,32 +33,66 @@ function App() {
    * @description changes a book from one shelf to another
    * by user's actions
    */
-  const changeShelf = (bookOption) => {
+  const changeShelfLibrary = (bookOption) => {
     updateLibrary(bookOption, bookOption.shelf);
-    const newBooks = books.map((book) => {
-      if(book.id === bookOption.id) {
+
+    const myNewBooks = myBooks.map((book) => {
+      if(book.id == bookOption.id) {
         book.shelf = bookOption.shelf;
       }
       return book;
-    });
+    })
 
-    setBooks(newBooks);
+    setMyBooks(myNewBooks);
+  }
+
+  /**
+   * @param {object} bookOption
+   * @description check if the book is already in
+   * library, if not add to it 
+   */
+
+  const changeShelfSearch = (bookOption) => {
+    updateLibrary(bookOption, bookOption.shelf);
+
+    const isInLibrary = myBooks.filter((book) => book.id === bookOption.id);
+
+    if(isInLibrary.length === 0) {
+      setMyBooks(myBooks.concat(bookOption));
+    } else {
+      changeShelfLibrary(bookOption);
+    }
   }
 
   /**
    * @param {string} searchQuery 
-   * @description get books from the server based on search params
+   * @description get myBooks from the server based on search params
    */
   const changeSearch = async (searchQuery) => {
     if(!searchQuery) {
-      setSearchBooks(books);
+      setSearchBooks([]);
       return;
     }
 
-  const res = await BooksAPI.search(searchQuery, 10);
-    if(res && Array.isArray(res)) {
-      setSearchBooks(res);
+    const response = await BooksAPI.search(searchQuery, 4);
+    if(response.length === 0) {
+      setSearchBooks([]);
+      return;
     }
+    
+    for(let i=0; i < response.length; i++) {
+      for(let j=0; j < myBooks.length; j++) {
+        if(response[i].id === myBooks[j].id) {
+          response[i].shelf = myBooks[j].shelf;
+        }
+
+        if(response[i].shelf === undefined) {
+          response[i].shelf = "none";
+        }
+      }
+    }
+
+    setSearchBooks(response);
   }
 
   return (
@@ -72,14 +105,14 @@ function App() {
         <Routes>
           <Route exact path="/" element={
             <ListBooks
-              books={books}
-              onChangeShelf={changeShelf} 
+              books={myBooks}
+              onChangeShelfLibrary={changeShelfLibrary} 
             />} />
           
           <Route exact path="/searchpage" element={
             <SearchPage
               books={searchBooks}
-              onChangeShelf={changeShelf}
+              onChangeShelfSearch={changeShelfSearch}
               onChangeSearch={changeSearch}
             /> }/>
         </Routes>
